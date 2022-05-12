@@ -13,6 +13,7 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
   late String email;
   late String password;
 
@@ -145,24 +146,28 @@ class _CreateAccountState extends State<CreateAccount> {
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                     child: ElevatedButton(
-                        onPressed: () async {
+                        onPressed: () {
+                          // authentication
                           setState(() {
                             showSpinner = true;
                           });
-                          // // authenticatiom
-                          try {
-                            final newuser =
-                                await _auth.createUserWithEmailAndPassword(
-                                    email: email, password: password);
-                            if (newuser != null) {
-                              Navigator.pushNamed(context, '/');
-                            }
-                            setState(() {
-                              showSpinner = false;
-                            });
-                          } catch (e) {
-                            print(e);
+
+                          final newuser = _auth
+                              .createUserWithEmailAndPassword(
+                                  email: email, password: password)
+                                  //firestore
+                              .then((value) {
+                            _firestore
+                                .collection('user')
+                                .doc(value.user!.uid)
+                                .set({"email": email, "password": password});
+                          });
+                          if (newuser != null) {
+                            Navigator.pushNamed(context, '/');
                           }
+                          setState(() {
+                            showSpinner = false;
+                          });
                         },
                         child: const Text('Sign up'))),
               ),
