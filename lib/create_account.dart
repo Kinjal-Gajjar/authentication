@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import 'backbutton.dart';
+
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
 
@@ -26,7 +28,7 @@ class _CreateAccountState extends State<CreateAccount> {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           elevation: 0,
-          leading: _backButton(context),
+          leading: backButton(context),
           backgroundColor: const Color(0xff251f34),
         ),
         body: SingleChildScrollView(
@@ -142,6 +144,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   ],
                 ),
               ),
+              //signup button
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
@@ -155,7 +158,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           final newuser = _auth
                               .createUserWithEmailAndPassword(
                                   email: email, password: password)
-                                  //firestore
+                              //firestore
                               .then((value) {
                             _firestore
                                 .collection('user')
@@ -171,9 +174,11 @@ class _CreateAccountState extends State<CreateAccount> {
                         },
                         child: const Text('Sign up'))),
               ),
+
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.27,
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -189,6 +194,14 @@ class _CreateAccountState extends State<CreateAccount> {
                         style: TextStyle(color: Color(0xff14dae2)),
                       ))
                 ],
+              ),
+              Center(
+                child: TextButton(
+                    onPressed: () => Navigator.pushNamed(context, '/phone'),
+                    child: const Text(
+                      'Sign In With Phone',
+                      style: TextStyle(color: Color(0xff14dae2)),
+                    )),
               )
             ],
           ),
@@ -198,13 +211,4 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 }
 
-Widget _backButton(BuildContext context) {
-  return IconButton(
-      onPressed: () {
-        Navigator.of(context).pop(true);
-      },
-      icon: Icon(
-        Icons.arrow_back,
-        color: Colors.grey[350],
-      ));
-}
+

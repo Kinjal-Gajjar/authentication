@@ -1,5 +1,6 @@
 import 'package:authentication/create_account.dart';
 import 'package:authentication/login.dart';
+import 'package:authentication/signin_with_phone.dart';
 import 'package:authentication/success.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/': ((context) => const LoginScreen()),
         '/second': ((context) => const CreateAccount()),
         '/success': ((context) => const SuccesScrren()),
+        '/phone': ((context) => SignWithPhone()),
       },
     );
   }
