@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:authentication/success.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'backbutton.dart';
@@ -11,6 +15,25 @@ class Verify extends StatefulWidget {
 }
 
 class _VerifyState extends State<Verify> {
+  TextEditingController otpController = TextEditingController();
+
+  void otpVerify() async {
+    String otp = otpController.text.trim();
+
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: widget.verificationId, smsCode: otp);
+
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      if (userCredential.user != null) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SuccesScrren()));
+      }
+    } on FirebaseAuthException catch (ex) {
+      log(ex.code.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +78,16 @@ class _VerifyState extends State<Verify> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextField(
+                  controller: otpController,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w400,
                   ),
+                  maxLength: 6,
                   keyboardType: TextInputType.number,
                   cursorColor: Colors.white,
                   decoration: InputDecoration(
+                      counterText: '',
                       border: InputBorder.none,
                       fillColor: const Color(0xff3B324E),
                       filled: true,
@@ -80,7 +106,10 @@ class _VerifyState extends State<Verify> {
               ),
               Center(
                   child: ElevatedButton(
-                      onPressed: () {}, child: Text('Verify and Sign in')))
+                      onPressed: () {
+                        otpVerify();
+                      },
+                      child: Text('Verify and Sign in')))
             ]),
       ),
     );

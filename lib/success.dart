@@ -80,7 +80,7 @@ class _SuccesScrrenState extends State<SuccesScrren> {
             child: ElevatedButton(
                 onPressed: () {
                   FirebaseAuth.instance.signOut().then((value) {
-                    Navigator.pop(context);
+                    Navigator.popAndPushNamed(context, '/');
                   }).catchError((e) {
                     print(e);
                   });
